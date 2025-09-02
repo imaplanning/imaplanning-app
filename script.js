@@ -1,10 +1,9 @@
+// script.js
 document.addEventListener('DOMContentLoaded', () => {
-    // --- CONFIGURACIÓN ---
-    // ESTA URL LA OBTENDRÁS EN LA FASE 4 (DEPLOYMENT)
-    const BACKEND_URL = 'https://imaplanner-backend.onrender.com'; 
-    const CALENDLY_URL = 'https://calendly.com/imaplanning'; // Reemplaza con tu link de Calendly
+    // URL correcta apuntando al endpoint /chat
+    const BACKEND_URL = 'https://imaplanner-backend.onrender.com/chat'; 
+    const CALENDLY_URL = 'https://calendly.com/imaplanning';
 
-    // --- ELEMENTOS DEL DOM ---
     const chatWindow = document.getElementById('chat-window');
     const userInput = document.getElementById('user-input');
     const sendButton = document.getElementById('send-button');
@@ -12,10 +11,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const chatInputArea = document.querySelector('.chat-input-area');
     const submitContactButton = document.getElementById('submit-contact-button');
 
-    // --- HISTORIAL DE CONVERSACIÓN ---
     let conversationHistory = [];
 
-    // --- LÓGICA DEL CHAT ---
     async function sendMessageToAI(messageText) {
         if (messageText.trim() === '' || sendButton.disabled) return;
 
@@ -33,11 +30,17 @@ document.addEventListener('DOMContentLoaded', () => {
             });
 
             removeTypingIndicator();
-            if (!response.ok) throw new Error(`Error del servidor: ${response.statusText}`);
+            if (!response.ok) {
+                console.error(`Error del servidor: ${response.status} ${response.statusText}`);
+                throw new Error('La respuesta del servidor no fue exitosa.');
+            }
             
             const data = await response.json();
-            const aiReply = data.reply;
+            if (data.error) {
+                throw new Error(data.error);
+            }
 
+            const aiReply = data.reply;
             addMessage(aiReply, 'ai');
             conversationHistory.push({ role: 'model', parts: [{ text: aiReply }] });
 
@@ -54,7 +57,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // --- FUNCIONES AUXILIARES ---
     function addMessage(message, sender) {
         const messageElement = document.createElement('div');
         messageElement.classList.add('message', `${sender}-message`);
@@ -82,7 +84,6 @@ document.addEventListener('DOMContentLoaded', () => {
         sendButton.disabled = disabled;
     }
 
-    // --- MANEJADORES DE EVENTOS ---
     sendButton.addEventListener('click', () => sendMessageToAI(userInput.value));
     userInput.addEventListener('keypress', (event) => {
         if (event.key === 'Enter') sendMessageToAI(userInput.value);
@@ -92,14 +93,12 @@ document.addEventListener('DOMContentLoaded', () => {
         const name = document.getElementById('contact-name').value;
         const email = document.getElementById('contact-email').value;
         if (name && email) {
-            console.log(`Lead capturado: Nombre=${name}, Email=${email}`);
-            // Aquí podrías enviar esta info a un CRM o a tu email en un futuro
-            contactFormContainer.innerHTML = `<h4>¡Gracias, ${name}!</h4><p>Hemos recibido tus datos. En breve nos pondremos en contacto contigo. Mientras tanto, puedes agendar una sesión directamente en nuestro calendario.</p><a href="${CALENDLY_URL}" target="_blank" id="submit-contact-button">Agendar Ahora</a>`;
+            contactFormContainer.innerHTML = `<h4>¡Gracias, ${name}!</h4><p>Hemos recibido tus datos. Mientras tanto, puedes agendar una sesión directamente.</p><a href="${CALENDLY_URL}" target="_blank" id="submit-contact-button">Agendar Ahora</a>`;
         } else {
             alert('Por favor, completa tu nombre y correo electrónico.');
         }
     });
 
-    // Iniciar conversación
-    sendMessageToAI("Hola");
+    // Iniciar conversación con un saludo inicial de la IA
+    addMessage('¡Hola! Soy IMA Planner. Para construir tu plan, necesito hacerte algunas preguntas. ¿Estás listo para empezar?', 'ai');
 });
