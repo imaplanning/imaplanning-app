@@ -11,24 +11,60 @@
 </head>
 <body>
     <header class="app-header">
-        <img src="URL_DE_TU_LOGO_AQUI" alt="Logo de imaplanning" class="logo">
+        <img src="https://imgur.com/ARBGo5f" alt="Logo de imaplanning" class="logo">
         <h1>Decisiones con Propósito</h1>
     </header>
 
-    <main class="chat-container">
-        <div id="chat-window" class="chat-window">
+    <main class="main-container">
+
+        <div id="chat-module-container" class="chat-container">
+            <div id="chat-window" class="chat-window"></div>
+            <div id="contact-form-container" style="display: none;">
+                <h4>Tu Diagnóstico está listo</h4>
+                <p>Para enviarte el resumen en PDF, por favor déjanos tus datos.</p>
+                <input type="text" id="contact-whatsapp" class="contact-input" placeholder="WhatsApp" required>
+                <input type="email" id="contact-email" class="contact-input" placeholder="Correo Electrónico" required>
+                <button id="submit-contact-button" class="submit-button-style">Enviar PDF y Agendar</button>
             </div>
-        <div id="contact-form-container" style="display: none;">
-            <h4>Tu Diagnóstico está listo</h4>
-            <p>Para enviarte el resumen en PDF, por favor déjanos tus datos.</p>
-            <input type="text" id="contact-name" class="contact-input" placeholder="WhatsApp" required>
-            <input type="email" id="contact-email" class="contact-input" placeholder="Correo Electrónico" required>
-            <button id="submit-contact-button">Enviar PDF y Agendar</button>
+            <div class="chat-input-area">
+                <input type="text" id="user-input" placeholder="Escribe tu respuesta aquí...">
+                <button id="send-button">Enviar</button>
+            </div>
         </div>
-        <div class="chat-input-area">
-            <input type="text" id="user-input" placeholder="Escribe tu respuesta aquí...">
-            <button id="send-button">Enviar</button>
+
+        <div id="calculator-container" class="calculator-container" style="display: none;">
+            <div class="calculator-summary">
+                <h3>Resumen en Vivo</h3>
+                <div class="summary-item"><span>Ingreso Neto Mensual:</span> <span id="summary-net-income">$0.00</span></div>
+                <div class="summary-item"><span>Gastos Totales:</span> <span id="summary-total-expenses">$0.00</span></div>
+                <div class="summary-item main-summary"><span>Flujo de Efectivo Mensual:</span> <span id="summary-cash-flow">$0.00</span></div>
+            </div>
+
+            <div class="calculator-section">
+                <h4>Ingresos Mensuales</h4>
+                <div class="input-group">
+                    <label for="gross-income">Ingreso Mensual Bruto (antes de impuestos)</label>
+                    <input type="number" id="gross-income" class="calc-input" placeholder="50000">
+                    <small><i>El ISR e Ingreso Neto se calcularán automáticamente.</i></small>
+                </div>
+            </div>
+
+            <div class="calculator-section">
+                <h4>Gastos Mensuales</h4>
+                <h5>🏡 Vivienda</h5>
+                <div class="input-group">
+                    <label>Renta / Hipoteca</label>
+                    <input type="number" class="calc-input expense-input" placeholder="15000">
+                </div>
+                <div class="input-group">
+                    <label>Servicios (Luz, Agua, Gas)</label>
+                    <input type="number" class="calc-input expense-input" placeholder="1500">
+                </div>
+                </div>
+            
+            <button id="calculator-continue-btn">Continuar con el Análisis</button>
         </div>
+
     </main>
     
     <footer class="app-footer">
