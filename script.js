@@ -1,8 +1,7 @@
 // script.js
 document.addEventListener('DOMContentLoaded', () => {
-    // URL correcta apuntando al endpoint /chat
     const BACKEND_URL = 'https://imaplanner-backend.onrender.com/chat'; 
-    const CALENDLY_URL = 'https://calendly.com/imaplanning';
+    const CALENDLY_URL = 'https://calendly.com/imaplanning'; // Reemplaza con tu link de Calendly
 
     const chatWindow = document.getElementById('chat-window');
     const userInput = document.getElementById('user-input');
@@ -31,7 +30,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
             removeTypingIndicator();
             if (!response.ok) {
-                console.error(`Error del servidor: ${response.status} ${response.statusText}`);
                 throw new Error('La respuesta del servidor no fue exitosa.');
             }
             
@@ -44,7 +42,7 @@ document.addEventListener('DOMContentLoaded', () => {
             addMessage(aiReply, 'ai');
             conversationHistory.push({ role: 'model', parts: [{ text: aiReply }] });
 
-            if (aiReply.includes("déjanos tus datos")) {
+            if (aiReply.toLowerCase().includes("whatsapp y correo")) {
                 chatInputArea.style.display = 'none';
                 contactFormContainer.style.display = 'block';
             }
@@ -83,7 +81,7 @@ document.addEventListener('DOMContentLoaded', () => {
         userInput.disabled = disabled;
         sendButton.disabled = disabled;
     }
-
+    
     sendButton.addEventListener('click', () => sendMessageToAI(userInput.value));
     userInput.addEventListener('keypress', (event) => {
         if (event.key === 'Enter') sendMessageToAI(userInput.value);
@@ -93,12 +91,12 @@ document.addEventListener('DOMContentLoaded', () => {
         const name = document.getElementById('contact-name').value;
         const email = document.getElementById('contact-email').value;
         if (name && email) {
-            contactFormContainer.innerHTML = `<h4>¡Gracias, ${name}!</h4><p>Hemos recibido tus datos. Mientras tanto, puedes agendar una sesión directamente.</p><a href="${CALENDLY_URL}" target="_blank" id="submit-contact-button">Agendar Ahora</a>`;
+            contactFormContainer.innerHTML = `<h4>¡Gracias!</h4><p>Hemos recibido tus datos y te hemos enviado el resumen. Ahora puedes agendar tu asesoría.</p><a href="${CALENDLY_URL}" target="_blank" id="submit-contact-button">Agendar Ahora</a>`;
         } else {
-            alert('Por favor, completa tu nombre y correo electrónico.');
+            alert('Por favor, completa ambos campos.');
         }
     });
 
-    // Iniciar conversación con un saludo inicial de la IA
-    addMessage('¡Hola! Soy IMA Planner. Para construir tu plan, necesito hacerte algunas preguntas. ¿Estás listo para empezar?', 'ai');
+    // Inicia la conversación con un "Hola" del usuario para activar el prompt
+    sendMessageToAI("Hola");
 });

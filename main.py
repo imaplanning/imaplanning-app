@@ -1,4 +1,4 @@
-# main.py - Versión final con múltiples orígenes permitidos
+# main.py
 import google.generativeai as genai
 import os
 from flask import Flask, request, jsonify
@@ -6,26 +6,22 @@ from flask_cors import CORS
 import logging
 
 app = Flask(__name__)
+# Configuración de CORS simplificada para máxima compatibilidad
+CORS(app)
 
-# Lista de orígenes permitidos
-allowed_origins = [
-    "https://imaplanner.onrender.com",  # La dirección de Render
-    "https://imaplanning.github.io"   # La nueva dirección de GitHub Pages
-]
-
-# Configuración de CORS para permitir conexiones solo de esas direcciones
-CORS(app, resources={r"/chat": {"origins": allowed_origins}})
-
+# Configuración de logging para ver las solicitudes entrantes en los logs de Render
 logging.basicConfig(level=logging.INFO)
 
 @app.route('/chat', methods=['POST', 'OPTIONS'])
 def chat_handler():
     if request.method == 'OPTIONS':
+        # Maneja la solicitud preflight de CORS
         return '', 204
     try:
         app.logger.info(f"Solicitud recibida de: {request.origin}")
         API_KEY = os.environ.get('GEMINI_API_KEY')
         if not API_KEY:
+            app.logger.error("API Key de Gemini no configurada.")
             return jsonify({"error": "Configuración del servidor incompleta."}), 500
             
         genai.configure(api_key=API_KEY)
@@ -46,6 +42,7 @@ def chat_handler():
         last_user_message = conversation_history[-1]['parts'][0]['text']
         
         response = chat_session.send_message(last_user_message)
+        app.logger.info('Respuesta de IA generada exitosamente.')
 
         return jsonify({"reply": response.text})
 
