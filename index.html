@@ -16,8 +16,21 @@
     </header>
 
     <main class="main-container">
+
         <div id="chat-module-container" class="chat-container">
+            <div id="chat-window" class="chat-window"></div>
+            <div id="contact-form-container" style="display: none;">
+                <h4>Tu Diagnóstico está listo</h4>
+                <p>Para enviarte el resumen en PDF, por favor déjanos tus datos.</p>
+                <input type="text" id="contact-whatsapp" class="contact-input" placeholder="WhatsApp" required>
+                <input type="email" id="contact-email" class="contact-input" placeholder="Correo Electrónico" required>
+                <button id="submit-contact-button">Enviar PDF y Agendar</button>
             </div>
+            <div class="chat-input-area">
+                <input type="text" id="user-input" placeholder="Escribe tu respuesta aquí...">
+                <button id="send-button">Enviar</button>
+            </div>
+        </div>
 
         <div id="calculator-container" class="calculator-container" style="display: none;">
             <div class="calculator-summary">
@@ -32,7 +45,6 @@
                 <div class="input-group">
                     <label for="gross-income">Ingreso Mensual Bruto (antes de impuestos)</label>
                     <input type="number" id="gross-income" class="calc-input" placeholder="50000">
-                    <small><i>El ISR e Ingreso Neto se calcularán automáticamente.</i></small>
                 </div>
             </div>
 
@@ -41,51 +53,46 @@
                 
                 <div class="expense-category">
                     <h5>🏡 Vivienda</h5>
-                    <small class="microguide">Incluye renta/hipoteca, servicios, internet, mantenimiento y predial mensualizado.</small>
+                    <small class="microguide">Incluye renta/hipoteca, servicios, internet, etc.</small>
                     <div class="input-group"><label>Renta / Hipoteca</label><input type="number" class="calc-input expense-input" placeholder="0"></div>
                     <div class="input-group"><label>Servicios (Luz, Agua, Gas)</label><input type="number" class="calc-input expense-input" placeholder="0"></div>
-                    <div class="input-group"><label>Internet, Telefonía y Streaming</label><input type="number" class="calc-input expense-input" placeholder="0"></div>
                     <div class="custom-expense-area" id="vivienda-custom-area"></div>
-                    <button class="add-expense-btn" data-target="vivienda-custom-area">+ Añadir Gasto de Vivienda</button>
+                    <button class="add-expense-btn" data-target="vivienda-custom-area">+ Añadir Gasto</button>
                 </div>
                 
                 <div class="expense-category">
                     <h5>🚗 Transporte</h5>
-                    <small class="microguide">Suma gasolina, transporte público, seguros del auto, mantenimiento y peajes.</small>
+                    <small class="microguide">Suma gasolina, transporte público, seguros, etc.</small>
                     <div class="input-group"><label>Gasolina / Transporte Público</label><input type="number" class="calc-input expense-input" placeholder="0"></div>
-                    <div class="input-group"><label>Seguro y Mantenimiento de Auto</label><input type="number" class="calc-input expense-input" placeholder="0"></div>
                     <div class="custom-expense-area" id="transporte-custom-area"></div>
-                    <button class="add-expense-btn" data-target="transporte-custom-area">+ Añadir Gasto de Transporte</button>
+                    <button class="add-expense-btn" data-target="transporte-custom-area">+ Añadir Gasto</button>
                 </div>
 
                 <div class="expense-category">
                     <h5>👨‍👩‍👧 Estilo de Vida y Familia</h5>
-                    <small class="microguide">Aquí va el súper, comidas fuera, entretenimiento, colegiaturas y compras.</small>
+                    <small class="microguide">Aquí va el súper, comidas fuera, colegiaturas, etc.</small>
                     <div class="input-group"><label>Supermercado / Despensa</label><input type="number" class="calc-input expense-input" placeholder="0"></div>
                     <div class="input-group"><label>Restaurantes y Salidas</label><input type="number" class="calc-input expense-input" placeholder="0"></div>
                     <div class="input-group"><label>Colegiaturas y Gastos Escolares</label><input type="number" class="calc-input expense-input" placeholder="0"></div>
-                    <div class="input-group"><label>Compras y Entretenimiento</label><input type="number" class="calc-input expense-input" placeholder="0"></div>
                     <div class="custom-expense-area" id="estilo-custom-area"></div>
-                    <button class="add-expense-btn" data-target="estilo-custom-area">+ Añadir Gasto de Estilo de Vida</button>
+                    <button class="add-expense-btn" data-target="estilo-custom-area">+ Añadir Gasto</button>
                 </div>
                 
                 <div class="expense-category">
                     <h5>❤️ Salud y Protección</h5>
-                    <small class="microguide">Considera primas de seguros, medicinas, gimnasio y cuidado personal.</small>
+                    <small class="microguide">Considera primas de seguros, medicinas, gimnasio, etc.</small>
                     <div class="input-group"><label>Seguro de Gastos Médicos</label><input type="number" class="calc-input expense-input" placeholder="0"></div>
                     <div class="input-group"><label>Seguro de Vida</label><input type="number" class="calc-input expense-input" placeholder="0"></div>
-                    <div class="input-group"><label>Gimnasio / Medicinas</label><input type="number" class="calc-input expense-input" placeholder="0"></div>
                     <div class="custom-expense-area" id="salud-custom-area"></div>
-                    <button class="add-expense-btn" data-target="salud-custom-area">+ Añadir Gasto de Salud</button>
+                    <button class="add-expense-btn" data-target="salud-custom-area">+ Añadir Gasto</button>
                 </div>
                 
                 <div class="expense-category">
                     <h5>💳 Deudas</h5>
-                    <small class="microguide">¿Cuánto pagas mensualmente a tus tarjetas de crédito o a otros préstamos?</small>
+                    <small class="microguide">¿Cuánto pagas mensualmente a tus créditos?</small>
                     <div class="input-group"><label>Pago a Tarjetas de Crédito</label><input type="number" class="calc-input expense-input" placeholder="0"></div>
-                    <div class="input-group"><label>Pago de otros préstamos</label><input type="number" class="calc-input expense-input" placeholder="0"></div>
                     <div class="custom-expense-area" id="deudas-custom-area"></div>
-                    <button class="add-expense-btn" data-target="deudas-custom-area">+ Añadir Otra Deuda</button>
+                    <button class="add-expense-btn" data-target="deudas-custom-area">+ Añadir Gasto</button>
                 </div>
             </div>
             
@@ -94,7 +101,8 @@
     </main>
     
     <footer class="app-footer">
-        </footer>
+        <p>&copy; 2025 imaplanning - Todos los derechos reservados.</p>
+    </footer>
     <script src="script.js"></script>
 </body>
 </html>
