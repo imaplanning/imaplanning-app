@@ -144,4 +144,42 @@ document.addEventListener('DOMContentLoaded', () => {
     // Inicializa la app
     updateSummary();
     sendMessageToAI("Hola, inicia la conversación.");
+    // --- FUNCIONES AUXILIARES DEL CHAT ---
+
+    function addMessage(message, sender) {
+        const messageElement = document.createElement('div');
+        messageElement.classList.add('message', `${sender}-message`);
+        messageElement.innerText = message;
+        chatWindow.appendChild(messageElement);
+        chatWindow.scrollTop = chatWindow.scrollHeight;
+    }
+
+    function showTypingIndicator() {
+        const typingElement = document.createElement('div');
+        typingElement.id = 'typing-indicator';
+        typingElement.classList.add('message', 'ai-message');
+        typingElement.innerText = '...';
+        chatWindow.appendChild(typingElement);
+        chatWindow.scrollTop = chatWindow.scrollHeight;
+    }
+
+    function removeTypingIndicator() {
+        const typingElement = document.getElementById('typing-indicator');
+        if (typingElement) chatWindow.removeChild(typingElement);
+    }
+
+    function toggleInput(disabled) {
+        userInput.disabled = disabled;
+        sendButton.disabled = disabled;
+    }
+
+    // --- MANEJADORES DE EVENTOS ---
+    sendButton.addEventListener('click', () => sendMessageToAI(userInput.value));
+    userInput.addEventListener('keypress', (event) => {
+        if (event.key === 'Enter') sendMessageToAI(userInput.value);
+    });
+
+    // --- INICIO DE LA CONVERSACIÓN ---
+    updateSummary(); // Asegura que la calculadora esté inicializada
+    sendMessageToAI("Hola, inicia la conversación.");
 });
