@@ -1,13 +1,80 @@
 /* === CONFIGURACIÓN GENERAL === */
-:root { --primary-color: #0d2c4e; --secondary-color: #0091AD; --accent-color: #d9534f; --light-bg: #f4f7f9; --light-text: #ffffff; --dark-text: #333; }
-body { font-family: 'Roboto', sans-serif; background-color: var(--light-bg); color: var(--dark-text); margin: 0; }
-.main-container { display: flex; flex-direction: column; max-width: 800px; width: 100%; height: calc(100vh - 71px - 49px); margin: 0 auto; background-color: var(--light-text); box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
+:root {
+    --primary-color: #0d2c4e;
+    --secondary-color: #0091AD;
+    --accent-color: #d9534f;
+    --light-bg: #f4f7f9;
+    --white-bg: #ffffff;
+    --light-text: #ffffff;
+    --dark-text: #333;
+    --border-color: #ccc;
+    --shadow-color: rgba(0,0,0,0.05);
+}
+
+body {
+    font-family: 'Roboto', sans-serif;
+    background-color: var(--light-bg);
+    color: var(--dark-text);
+    margin: 0;
+}
+
+.main-container {
+    display: flex;
+    flex-direction: column;
+    max-width: 800px;
+    width: 100%;
+    height: calc(100vh - 71px - 49px);
+    margin: 0 auto;
+    background-color: var(--white-bg);
+    box-shadow: 0 4px 12px var(--shadow-color);
+}
 
 /* === ENCABEZADO Y FOOTER === */
-.app-header { background-color: var(--primary-color); padding: 10px 25px; display: flex; align-items: center; color: var(--light-text); }
+.app-header {
+    background-color: var(--primary-color);
+    padding: 10px 25px;
+    display: flex;
+    align-items: center;
+    color: var(--light-text);
+}
 .logo { height: 45px; margin-right: 15px; }
 .app-header h1 { font-size: 1.3em; margin: 0; font-weight: 400; }
 .app-footer { background-color: var(--primary-color); color: var(--light-bg); text-align: center; padding: 15px; font-size: 0.9em; }
+
+/* === PANTALLA DE BIENVENIDA Y FORMULARIOS === */
+.welcome-container, .form-container, .strategy-container {
+    padding: 30px 40px;
+    text-align: center;
+    overflow-y: auto;
+    height: 100%;
+    box-sizing: border-box;
+}
+.welcome-container h2, .form-container h3, .strategy-container h3 {
+    color: var(--primary-color);
+    font-size: 1.8em;
+    margin-top: 0;
+}
+.welcome-container p { font-size: 1.1em; line-height: 1.6; }
+.privacy-notice { font-size: 0.9em; color: #666; }
+.privacy-notice a { color: var(--secondary-color); }
+#start-btn, #form-continue-btn, #strategy-continue-btn {
+    background-color: var(--accent-color);
+    color: var(--light-text);
+    padding: 15px 30px;
+    font-size: 1.2em;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    margin-top: 20px;
+    transition: background-color 0.3s;
+}
+#start-btn:hover, #form-continue-btn:hover, #strategy-continue-btn:hover { background-color: #c9302c; }
+
+.form-section { text-align: left; margin-bottom: 25px; border-top: 1px solid #eee; padding-top: 20px; }
+.form-section h4 { color: var(--secondary-color); margin-top: 0; }
+.input-group { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; margin-bottom: 12px; gap: 10px; }
+.input-group label { font-size: 1em; flex-basis: 40%; }
+.input-group input, .input-group select { padding: 10px; border: 1px solid var(--border-color); border-radius: 5px; font-size: 1em; flex-grow: 1; flex-basis: 55%; }
 
 /* === MÓDULO DE CHAT === */
 .chat-container { display: flex; flex-direction: column; width: 100%; height: 100%; overflow: hidden; }
@@ -16,30 +83,32 @@ body { font-family: 'Roboto', sans-serif; background-color: var(--light-bg); col
 .ai-message { background-color: #e9f2ff; color: var(--primary-color); align-self: flex-start; border-bottom-left-radius: 5px; }
 .user-message { background-color: var(--secondary-color); color: var(--light-text); align-self: flex-end; border-bottom-right-radius: 5px; }
 .chat-input-area { display: flex; padding: 15px; border-top: 1px solid #e0e0e0; background-color: #f9fafb; }
-#user-input { flex-grow: 1; border: 1px solid #ccc; border-radius: 25px; padding: 10px 20px; font-size: 1em; }
+#user-input { flex-grow: 1; border: 1px solid var(--border-color); border-radius: 25px; padding: 10px 20px; font-size: 1em; }
 #send-button { background-color: var(--primary-color); color: var(--light-text); border: none; border-radius: 25px; padding: 10px 25px; margin-left: 10px; cursor: pointer; font-size: 1em; font-weight: bold; }
 
-/* === MÓDULO DE CALCULADORA === */
-.calculator-container { padding: 20px 30px; overflow-y: auto; width: calc(100% - 60px); }
+/* === MÓDULO DE CALCULADORA Y ESTRATEGIAS === */
+.calculator-container, .strategy-container { padding: 20px 30px; overflow-y: auto; width: calc(100% - 60px); }
 .calculator-summary { background-color: var(--primary-color); color: var(--light-text); padding: 20px; border-radius: 8px; margin-bottom: 25px; text-align: right; }
 .summary-item { font-size: 1.1em; margin-bottom: 8px; }
 .summary-item.main-summary { font-size: 1.4em; font-weight: bold; margin-top: 10px; border-top: 1px solid #ffffff44; padding-top: 10px; }
-.calculator-section h4 { font-size: 1.5em; color: var(--primary-color); border-bottom: 2px solid var(--secondary-color); padding-bottom: 5px; margin: 30px 0 20px 0; }
-.expense-category { margin-bottom: 25px; }
-.expense-category h5 { font-size: 1.2em; margin-bottom: 5px; }
+.expense-category, .strategy-category { margin-bottom: 25px; }
+.expense-category h5, .strategy-category h5 { font-size: 1.2em; margin-bottom: 5px; }
 .microguide { font-size: 0.9em; color: #666; font-style: italic; display: block; margin-bottom: 15px; }
-.input-group { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; margin-bottom: 10px; gap: 10px;}
-.input-group label { font-size: 1em; flex-basis: 60%; }
-.input-group input { padding: 8px; border: 1px solid #ccc; border-radius: 5px; text-align: right; width: 120px; font-size: 1em; }
 .custom-expense { display: grid; grid-template-columns: 1fr 136px; gap: 10px; margin-top: 10px; }
 .custom-expense input[type="text"] { text-align: left; width: 100%; }
-.add-expense-btn { background: none; border: 1px dashed var(--secondary-color); color: var(--secondary-color); cursor: pointer; padding: 5px 10px; border-radius: 5px; margin-top: 10px; font-size: 0.9em;}
-#calculator-continue-btn { background-color: var(--secondary-color); color: var(--light-text); width: 100%; padding: 15px; font-size: 1.2em; border: none; border-radius: 8px; cursor: pointer; margin-top: 20px; }
+.add-expense-btn, .add-dependent-btn { background: none; border: 1px dashed var(--secondary-color); color: var(--secondary-color); cursor: pointer; padding: 5px 10px; border-radius: 5px; margin-top: 10px; font-size: 0.9em;}
+.strategy-table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+.strategy-table th, .strategy-table td { border: 1px solid #ddd; padding: 12px; text-align: left; }
+.strategy-table th { background-color: #e9f2ff; color: var(--primary-color); }
+.strategy-table td:first-child { text-align: center; }
+.strategy-table input[type="checkbox"] { transform: scale(1.5); }
+.strategy-summary { text-align: right; font-size: 1.2em; font-weight: bold; margin-top: 20px; }
+.info-box-fiscal { background-color: #fffbe6; border: 1px solid #ffe58f; border-radius: 5px; padding: 15px; margin: 15px 0; font-size: 0.9em; line-height: 1.5; }
+.info-box-fiscal.special-benefit { background-color: #e6f7ff; border-color: #91d5ff; }
 
-/* === FORMULARIO DE CONTACTO === */
+/* === FORMULARIO DE CONTACTO FINAL === */
 #contact-form-container { padding: 30px; text-align: center; }
 #contact-form-container h4 { font-size: 1.4em; }
-.contact-input { width: 80%; margin-bottom: 15px; padding: 12px 15px; border-radius: 8px; border: 1px solid #ccc; font-size: 1em; }
 #submit-contact-button, #final-cta-button { background-color: var(--accent-color); color: var(--light-text); padding: 12px 25px; border: none; border-radius: 8px; cursor: pointer; font-size: 1.1em; text-decoration: none; display: inline-block; }
 
-@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes fadeIn { from { opacity: 0;

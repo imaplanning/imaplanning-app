@@ -17,84 +17,62 @@
 
     <main class="main-container">
 
-        <div id="chat-module-container" class="chat-container">
-            <div id="chat-window" class="chat-window"></div>
-            
-            <div id="contact-form-container" style="display: none;">
-                <h4>Tu Diagnóstico y Visión de Futuro están listos</h4>
-                <p>Para enviarte tu resumen en PDF y la carta de tu 'yo del futuro', por favor déjanos tus datos.</p>
-                <input type="text" id="contact-whatsapp" class="contact-input" placeholder="WhatsApp" required>
-                <input type="email" id="contact-email" class="contact-input" placeholder="Correo Electrónico" required>
-                <button id="submit-contact-button">Enviar Mi Plan de Futuro</button>
-            </div>
+        <div id="welcome-container" class="welcome-container">
+            <h2>Bienvenido al Asesor Virtual imaplanning</h2>
+            <p>Estás a punto de iniciar un breve diagnóstico para trazar el mapa de tu futuro financiero. Te haremos algunas preguntas para conocerte mejor y poder ofrecerte un plan personalizado.</p>
+            <p class="privacy-notice">Al continuar, aceptas nuestro <a href="#" id="privacy-link">Aviso de Privacidad Simplificado</a>.</p>
+            <button id="start-btn">Comenzar Diagnóstico</button>
+        </div>
 
+        <div id="chat-module-container" class="chat-container" style="display: none;">
+            <div id="chat-window" class="chat-window"></div>
             <div class="chat-input-area">
                 <input type="text" id="user-input" placeholder="Escribe tu respuesta aquí...">
                 <button id="send-button">Enviar</button>
             </div>
         </div>
 
-        <div id="calculator-container" class="calculator-container" style="display: none;">
-            <div class="calculator-summary">
-                <h3>Resumen en Vivo</h3>
-                <div class="summary-item"><span>Ingreso Neto Mensual:</span> <span id="summary-net-income">$0.00</span></div>
-                <div class="summary-item"><span>Gastos Totales:</span> <span id="summary-total-expenses">$0.00</span></div>
-                <div class="summary-item main-summary"><span>Flujo de Efectivo Mensual:</span> <span id="summary-cash-flow">$0.00</span></div>
+        <div id="form-container" class="form-container" style="display: none;">
+            <h3>Primero, necesitamos conocerte</h3>
+            <div class="form-section">
+                <h4>Tus Datos Personales</h4>
+                <div class="input-group"><label>Nombre Completo</label><input type="text" id="form-name"></div>
+                <div class="input-group"><label>Fecha de Nacimiento</label><input type="date" id="form-dob"></div>
+                <div class="input-group"><label>Estado Civil</label><select id="form-marital-status"><option>Soltero(a)</option><option>Casado(a)/Unión Libre</option></select></div>
             </div>
-
-            <div class="calculator-section">
-                <h4>Ingresos Mensuales</h4>
-                <div class="input-group">
-                    <label for="gross-income">Ingreso Mensual Bruto (antes de impuestos)</label>
-                    <input type="number" id="gross-income" class="calc-input" placeholder="50000">
-                </div>
+            <div class="form-section" id="partner-section" style="display: none;">
+                <h4>Datos de tu Pareja</h4>
+                <div class="input-group"><label>Nombre de tu Pareja</label><input type="text" id="form-partner-name"></div>
+                <div class="input-group"><label>Fecha de Nacimiento</label><input type="date" id="form-partner-dob"></div>
             </div>
-
-            <div class="calculator-section">
-                <h4>Gastos Mensuales</h4>
-                
-                <div class="expense-category">
-                    <h5>🏡 Vivienda</h5>
-                    <div class="input-group"><label>Renta / Hipoteca</label><input type="number" class="calc-input expense-input" placeholder="0"></div>
-                    <div class="input-group"><label>Servicios (Luz, Agua, Gas)</label><input type="number" class="calc-input expense-input" placeholder="0"></div>
-                    <div class="custom-expense-area" id="vivienda-custom-area"></div>
-                    <button class="add-expense-btn" data-target="vivienda-custom-area">+ Añadir Gasto</button>
-                </div>
-                
-                <div class="expense-category">
-                    <h5>🚗 Transporte</h5>
-                    <div class="input-group"><label>Gasolina / Transporte Público</label><input type="number" class="calc-input expense-input" placeholder="0"></div>
-                    <div class="custom-expense-area" id="transporte-custom-area"></div>
-                    <button class="add-expense-btn" data-target="transporte-custom-area">+ Añadir Gasto</button>
-                </div>
-
-                <div class="expense-category">
-                    <h5>👨‍👩‍👧 Estilo de Vida y Familia</h5>
-                    <div class="input-group"><label>Supermercado / Despensa</label><input type="number" class="calc-input expense-input" placeholder="0"></div>
-                    <div class="input-group"><label>Restaurantes y Salidas</label><input type="number" class="calc-input expense-input" placeholder="0"></div>
-                    <div class="input-group"><label>Colegiaturas y Gastos Escolares</label><input type="number" class="calc-input expense-input" placeholder="0"></div>
-                    <div class="custom-expense-area" id="estilo-custom-area"></div>
-                    <button class="add-expense-btn" data-target="estilo-custom-area">+ Añadir Gasto</button>
-                </div>
-                
-                <div class="expense-category">
-                    <h5>❤️ Salud y Protección</h5>
-                    <div class="input-group"><label>Seguro de Gastos Médicos</label><input type="number" class="calc-input expense-input" placeholder="0"></div>
-                    <div class="input-group"><label>Seguro de Vida</label><input type="number" class="calc-input expense-input" placeholder="0"></div>
-                    <div class="custom-expense-area" id="salud-custom-area"></div>
-                    <button class="add-expense-btn" data-target="salud-custom-area">+ Añadir Gasto</button>
-                </div>
-                
-                <div class="expense-category">
-                    <h5>💳 Deudas</h5>
-                    <div class="input-group"><label>Pago a Tarjetas de Crédito</label><input type="number" class="calc-input expense-input" placeholder="0"></div>
-                    <div class="custom-expense-area" id="deudas-custom-area"></div>
-                    <button class="add-expense-btn" data-target="deudas-custom-area">+ Añadir Gasto</button>
-                </div>
+            <div class="form-section">
+                <h4>Tus Dependientes Económicos</h4>
+                <div id="dependents-area"></div>
+                <button id="add-dependent-btn" class="add-expense-btn">+ Añadir Dependiente</button>
             </div>
-            
-            <button id="calculator-continue-btn">Continuar con el Análisis</button>
+            <div class="form-section">
+                <h4>Tu Perfil Profesional y Fiscal</h4>
+                <div class="input-group"><label>Profesión / Puesto</label><input type="text" id="form-profession"></div>
+                <div class="input-group"><label>Código Postal</label><input type="text" id="form-zipcode"></div>
+                <div class="input-group"><label>Régimen Fiscal</label><select id="form-tax-regime"><option>Sueldos y Salarios</option><option>Servicios Profesionales (Honorarios)</option><option>RESICO</option><option>Otro</option></select></div>
+            </div>
+            <button id="form-continue-btn">Guardar y Continuar a la Calculadora</button>
         </div>
+
+        <div id="calculator-container" class="calculator-container" style="display: none;">
+            </div>
+        
+        <div id="strategy-container" class="strategy-container" style="display: none;">
+             </div>
+
+        <div id="contact-form-container" class="form-container" style="display: none;">
+            <h4>Tu Diagnóstico y Visión de Futuro están listos</h4>
+            <p>Para enviarte tu resumen en PDF y la carta de tu 'yo del futuro', por favor déjanos tus datos.</p>
+            <div class="input-group"><label>WhatsApp</label><input type="tel" id="contact-whatsapp"></div>
+            <div class="input-group"><label>Correo Electrónico</label><input type="email" id="contact-email"></div>
+            <button id="submit-contact-button">Enviar Mi Plan de Futuro</button>
+        </div>
+
     </main>
     
     <footer class="app-footer">
