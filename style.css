@@ -1,44 +1,45 @@
 /* === CONFIGURACIÓN GENERAL === */
-body { font-family: 'Roboto', sans-serif; background-color: #f4f7f9; color: #333; margin: 0; }
-.main-container { display: flex; flex-direction: column; max-width: 800px; width: 100%; height: calc(100vh - 71px - 49px); margin: 0 auto; background-color: #ffffff; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
+:root { --primary-color: #0d2c4e; --secondary-color: #0091AD; --accent-color: #d9534f; --light-bg: #f4f7f9; --light-text: #ffffff; --dark-text: #333; }
+body { font-family: 'Roboto', sans-serif; background-color: var(--light-bg); color: var(--dark-text); margin: 0; }
+.main-container { display: flex; flex-direction: column; max-width: 800px; width: 100%; height: calc(100vh - 71px - 49px); margin: 0 auto; background-color: var(--light-text); box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
 
 /* === ENCABEZADO Y FOOTER === */
-.app-header { background-color: #0d2c4e; padding: 10px 25px; display: flex; align-items: center; box-shadow: 0 2px 4px rgba(0,0,0,0.1); color: white; }
+.app-header { background-color: var(--primary-color); padding: 10px 25px; display: flex; align-items: center; color: var(--light-text); }
 .logo { height: 45px; margin-right: 15px; }
 .app-header h1 { font-size: 1.3em; margin: 0; font-weight: 400; }
-.app-footer { background-color: #0d2c4e; color: #f4f7f9; text-align: center; padding: 15px; font-size: 0.9em; }
+.app-footer { background-color: var(--primary-color); color: var(--light-bg); text-align: center; padding: 15px; font-size: 0.9em; }
 
 /* === MÓDULO DE CHAT === */
 .chat-container { display: flex; flex-direction: column; width: 100%; height: 100%; overflow: hidden; }
 .chat-window { flex-grow: 1; padding: 20px; overflow-y: auto; display: flex; flex-direction: column; gap: 15px; }
 .message { padding: 12px 18px; border-radius: 20px; max-width: 80%; line-height: 1.6; word-wrap: break-word; animation: fadeIn 0.5s ease-in-out; }
-.ai-message { background-color: #e9f2ff; color: #0d2c4e; align-self: flex-start; border-bottom-left-radius: 5px; }
-.user-message { background-color: #0091AD; color: #ffffff; align-self: flex-end; border-bottom-right-radius: 5px; }
+.ai-message { background-color: #e9f2ff; color: var(--primary-color); align-self: flex-start; border-bottom-left-radius: 5px; }
+.user-message { background-color: var(--secondary-color); color: var(--light-text); align-self: flex-end; border-bottom-right-radius: 5px; }
 .chat-input-area { display: flex; padding: 15px; border-top: 1px solid #e0e0e0; background-color: #f9fafb; }
 #user-input { flex-grow: 1; border: 1px solid #ccc; border-radius: 25px; padding: 10px 20px; font-size: 1em; }
-#send-button { background-color: #0d2c4e; color: white; border: none; border-radius: 25px; padding: 10px 25px; margin-left: 10px; cursor: pointer; font-size: 1em; font-weight: bold; }
+#send-button { background-color: var(--primary-color); color: var(--light-text); border: none; border-radius: 25px; padding: 10px 25px; margin-left: 10px; cursor: pointer; font-size: 1em; font-weight: bold; }
 
 /* === MÓDULO DE CALCULADORA === */
-.calculator-container { padding: 20px; overflow-y: auto; width: 100%; }
-.calculator-summary { background-color: #0d2c4e; color: white; padding: 20px; border-radius: 8px; margin-bottom: 25px; text-align: right; }
+.calculator-container { padding: 20px 30px; overflow-y: auto; width: calc(100% - 60px); }
+.calculator-summary { background-color: var(--primary-color); color: var(--light-text); padding: 20px; border-radius: 8px; margin-bottom: 25px; text-align: right; }
 .summary-item { font-size: 1.1em; margin-bottom: 8px; }
 .summary-item.main-summary { font-size: 1.4em; font-weight: bold; margin-top: 10px; border-top: 1px solid #ffffff44; padding-top: 10px; }
-.calculator-section h4 { font-size: 1.5em; color: #0d2c4e; border-bottom: 2px solid #0091AD; padding-bottom: 5px; margin-bottom: 20px; }
+.calculator-section h4 { font-size: 1.5em; color: var(--primary-color); border-bottom: 2px solid var(--secondary-color); padding-bottom: 5px; margin: 30px 0 20px 0; }
 .expense-category { margin-bottom: 25px; }
 .expense-category h5 { font-size: 1.2em; margin-bottom: 5px; }
 .microguide { font-size: 0.9em; color: #666; font-style: italic; display: block; margin-bottom: 15px; }
-.input-group { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
-.input-group label, .custom-expense input[type="text"] { font-size: 1em; margin-right: 10px; }
-.input-group input, .custom-expense input { padding: 8px; border: 1px solid #ccc; border-radius: 5px; text-align: right; width: 120px; }
-.custom-expense { display: grid; grid-template-columns: 1fr 136px; gap: 10px; }
+.input-group { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; margin-bottom: 10px; gap: 10px;}
+.input-group label { font-size: 1em; flex-basis: 60%; }
+.input-group input { padding: 8px; border: 1px solid #ccc; border-radius: 5px; text-align: right; width: 120px; font-size: 1em; }
+.custom-expense { display: grid; grid-template-columns: 1fr 136px; gap: 10px; margin-top: 10px; }
 .custom-expense input[type="text"] { text-align: left; width: 100%; }
-.add-expense-btn { background: none; border: 1px dashed #0091AD; color: #0091AD; cursor: pointer; padding: 5px 10px; border-radius: 5px; margin-top: 10px; }
-#calculator-continue-btn { background-color: #0091AD; color: white; width: 100%; padding: 15px; font-size: 1.2em; border: none; border-radius: 8px; cursor: pointer; margin-top: 20px; }
+.add-expense-btn { background: none; border: 1px dashed var(--secondary-color); color: var(--secondary-color); cursor: pointer; padding: 5px 10px; border-radius: 5px; margin-top: 10px; font-size: 0.9em;}
+#calculator-continue-btn { background-color: var(--secondary-color); color: var(--light-text); width: 100%; padding: 15px; font-size: 1.2em; border: none; border-radius: 8px; cursor: pointer; margin-top: 20px; }
 
 /* === FORMULARIO DE CONTACTO === */
 #contact-form-container { padding: 30px; text-align: center; }
 #contact-form-container h4 { font-size: 1.4em; }
 .contact-input { width: 80%; margin-bottom: 15px; padding: 12px 15px; border-radius: 8px; border: 1px solid #ccc; font-size: 1em; }
-#submit-contact-button { background-color: #d9534f; color: white; padding: 12px 25px; border: none; border-radius: 8px; cursor: pointer; font-size: 1.1em; }
+#submit-contact-button, #final-cta-button { background-color: var(--accent-color); color: var(--light-text); padding: 12px 25px; border: none; border-radius: 8px; cursor: pointer; font-size: 1.1em; text-decoration: none; display: inline-block; }
 
 @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }

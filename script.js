@@ -7,7 +7,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const chatContainer = document.getElementById('chat-module-container');
     const calculatorContainer = document.getElementById('calculator-container');
     
-    // --- Elementos del Chat y Formulario de Contacto ---
     const chatWindow = document.getElementById('chat-window');
     const userInput = document.getElementById('user-input');
     const sendButton = document.getElementById('send-button');
@@ -15,7 +14,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const contactFormContainer = document.getElementById('contact-form-container');
     const submitContactButton = document.getElementById('submit-contact-button');
     
-    // --- Elementos de la Calculadora ---
     const calculatorInputs = document.querySelectorAll('.calc-input');
     const continueButton = document.getElementById('calculator-continue-btn');
     const summaryNetIncome = document.getElementById('summary-net-income');
@@ -38,31 +36,29 @@ document.addEventListener('DOMContentLoaded', () => {
         return bracket.fixed + marginalTax;
     }
 
+    function formatCurrency(value) {
+        return `$${value.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')}`;
+    }
+
     function updateSummary() {
         const grossIncome = parseFloat(document.getElementById('gross-income').value) || 0;
         const estimatedISR = calculateISR(grossIncome);
         const netIncome = grossIncome - estimatedISR;
-
         let totalExpenses = 0;
         document.querySelectorAll('.expense-input').forEach(input => {
             totalExpenses += parseFloat(input.value) || 0;
         });
-
         const cashFlow = netIncome - totalExpenses;
-
-        summaryNetIncome.textContent = `$${netIncome.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')}`;
-        summaryTotalExpenses.textContent = `$${totalExpenses.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')}`;
-        summaryCashFlow.textContent = `$${cashFlow.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')}`;
-        
-        return { cashFlow, estimatedISR };
+        summaryNetIncome.textContent = formatCurrency(netIncome);
+        summaryTotalExpenses.textContent = formatCurrency(totalExpenses);
+        summaryCashFlow.textContent = formatCurrency(cashFlow);
+        return { cashFlow, estimatedISR, grossIncome };
     }
 
     continueButton.addEventListener('click', () => {
         const results = updateSummary();
-        const annualReturnPotential = (results.estimatedISR * 12) * 0.15; // Simulación de potencial fiscal
-
-        const summaryMessage = `Análisis de calculadora completado. Flujo de Efectivo Mensual: $${results.cashFlow.toFixed(2)}. Potencial de Devolución Anual estimado: $${annualReturnPotential.toFixed(2)}.`;
-        
+        const annualReturnPotential = (results.estimatedISR * 12) * 0.15; // Simulación
+        const summaryMessage = `Análisis de calculadora completado. Ingreso Bruto Mensual: ${formatCurrency(results.grossIncome)}. Flujo de Efectivo Mensual: ${formatCurrency(results.cashFlow)}. Potencial de Devolución Anual estimado: ${formatCurrency(annualReturnPotential)}.`;
         calculatorContainer.style.display = 'none';
         chatContainer.style.display = 'flex';
         sendMessageToAI(summaryMessage);
@@ -73,7 +69,6 @@ document.addEventListener('DOMContentLoaded', () => {
             event.preventDefault();
             const targetId = event.target.dataset.target;
             const targetArea = document.getElementById(targetId);
-
             const newExpenseGroup = document.createElement('div');
             newExpenseGroup.classList.add('input-group', 'custom-expense');
             const nameInput = document.createElement('input');
@@ -83,7 +78,6 @@ document.addEventListener('DOMContentLoaded', () => {
             amountInput.type = 'number';
             amountInput.placeholder = '0';
             amountInput.classList.add('calc-input', 'expense-input');
-
             newExpenseGroup.appendChild(nameInput);
             newExpenseGroup.appendChild(amountInput);
             targetArea.appendChild(newExpenseGroup);
@@ -94,31 +88,22 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- LÓGICA DEL CHAT Y FORMULARIO ---
     async function sendMessageToAI(messageText) {
         if (messageText.trim() === '' && conversationHistory.length > 0) return;
-        
-        // No mostrar el "Hola" inicial del usuario, solo el de la IA
-        if (conversationHistory.length > 0) {
+        if (conversationHistory.length > 0 || messageText.toLowerCase() !== "hola, inicia la conversación.") {
            addMessage(messageText, 'user');
         }
         conversationHistory.push({ role: 'user', parts: [{ text: messageText }] });
         userInput.value = '';
         toggleInput(true);
         showTypingIndicator();
-
         try {
-            const response = await fetch(CHAT_BACKEND_URL, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ history: conversationHistory }),
-            });
+            const response = await fetch(CHAT_BACKEND_URL, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ history: conversationHistory }) });
             removeTypingIndicator();
             if (!response.ok) throw new Error('La respuesta del servidor no fue exitosa.');
             const data = await response.json();
             if (data.error) throw new Error(data.error);
-
             const aiReply = data.reply;
             addMessage(aiReply, 'ai');
             conversationHistory.push({ role: 'model', parts: [{ text: aiReply }] });
-
             if (aiReply.toLowerCase().includes("calculadora")) {
                 setTimeout(() => {
                     chatContainer.style.display = 'none';
@@ -138,37 +123,25 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     
     submitContactButton.addEventListener('click', async () => {
-        const whatsappInput = document.getElementById('contact-whatsapp');
-        const emailInput = document.getElementById('contact-email');
-        const whatsapp = whatsappInput.value;
-        const email = emailInput.value;
-
+        const whatsapp = document.getElementById('contact-whatsapp').value;
+        const email = document.getElementById('contact-email').value;
         if (!whatsapp || !email) {
-            alert('Por favor, completa ambos campos.');
-            return;
+            alert('Por favor, completa ambos campos.'); return;
         }
-
         submitContactButton.disabled = true;
         submitContactButton.innerText = 'Enviando...';
-
         try {
-            const response = await fetch(LEAD_BACKEND_URL, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ whatsapp, email }),
-            });
-            
+            const response = await fetch(LEAD_BACKEND_URL, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ whatsapp, email }) });
             if (!response.ok) throw new Error('No se pudo enviar la información.');
-
-            contactFormContainer.innerHTML = `<h4>¡Gracias!</h4><p>Hemos recibido tus datos y te hemos enviado el resumen. Ahora puedes agendar tu asesoría.</p><a href="${CALENDLY_URL}" target="_blank" id="submit-contact-button">Agendar Ahora</a>`;
+            contactFormContainer.innerHTML = `<h4>¡Gracias!</h4><p>Hemos recibido tus datos y te enviaremos el resumen. Ahora puedes agendar tu asesoría.</p><a href="${CALENDLY_URL}" target="_blank" id="final-cta-button">Dar el Primer Paso Hacia este Futuro</a>`;
         } catch (error) {
             alert('Hubo un problema al enviar tus datos. Por favor, inténtalo de nuevo.');
             submitContactButton.disabled = false;
-            submitContactButton.innerText = 'Enviar PDF y Agendar';
+            submitContactButton.innerText = 'Enviar Mi Plan de Futuro';
         }
     });
     
-    // --- FUNCIONES AUXILIARES DEL CHAT ---
+    // --- FUNCIONES AUXILIARES Y MANEJADORES DE EVENTOS ---
     function addMessage(message, sender) {
         const messageElement = document.createElement('div');
         messageElement.classList.add('message', `${sender}-message`);
@@ -176,7 +149,6 @@ document.addEventListener('DOMContentLoaded', () => {
         chatWindow.appendChild(messageElement);
         chatWindow.scrollTop = chatWindow.scrollHeight;
     }
-
     function showTypingIndicator() {
         const typingElement = document.createElement('div');
         typingElement.id = 'typing-indicator';
@@ -185,25 +157,21 @@ document.addEventListener('DOMContentLoaded', () => {
         chatWindow.appendChild(typingElement);
         chatWindow.scrollTop = chatWindow.scrollHeight;
     }
-
     function removeTypingIndicator() {
         const typingElement = document.getElementById('typing-indicator');
-        if (typingElement) chatWindow.removeChild(typingElement);
+        if (typingElement) typingElement.remove();
     }
-
     function toggleInput(disabled) {
         userInput.disabled = disabled;
         sendButton.disabled = disabled;
     }
-
-    // --- MANEJADORES DE EVENTOS ---
     calculatorInputs.forEach(input => input.addEventListener('input', updateSummary));
     sendButton.addEventListener('click', () => sendMessageToAI(userInput.value));
     userInput.addEventListener('keypress', (event) => {
         if (event.key === 'Enter') sendMessageToAI(userInput.value);
     });
 
-    // --- INICIO DE LA CONVERSACIÓN ---
+    // --- INICIO ---
     updateSummary();
     sendMessageToAI("Hola, inicia la conversación.");
 });
