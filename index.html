@@ -17,15 +17,15 @@
 
     <main class="main-container">
 
-        <!-- FASE 0: PANTALLA DE BIENVENIDA (Visible al inicio) -->
+        <!-- FASE 0: PANTALLA DE BIENVENIDA -->
         <div id="welcome-container" class="phase-container">
             <h2>Bienvenido al Asesor Virtual imaplanning</h2>
-            <p>Estás a punto de iniciar un breve diagnóstico para trazar el mapa de tu futuro financiero. Te haremos algunas preguntas para conocerte mejor y poder ofrecerte un plan personalizado.</p>
+            <p>Estás a punto de iniciar un breve diagnóstico para trazar el mapa de tu futuro financiero. El proceso es confidencial y seguro.</p>
             <p class="privacy-notice">Al continuar, aceptas nuestro <a href="#" id="privacy-link">Aviso de Privacidad Simplificado</a>.</p>
-            <button id="start-btn">Comenzar Diagnóstico</button>
+            <button id="start-btn" class="cta-button">Comenzar Diagnóstico</button>
         </div>
 
-        <!-- FASE 1: CHAT "ROMPEHIELOS" (Oculto al inicio) -->
+        <!-- FASE 1: CHAT "ROMPEHIELOS" -->
         <div id="chat-container" class="phase-container" style="display: none;">
             <div id="chat-window" class="chat-window"></div>
             <div class="chat-input-area">
@@ -34,53 +34,88 @@
             </div>
         </div>
 
-        <!-- FASE 1B: FORMULARIO INTELIGENTE (Oculto al inicio) -->
-        <div id="form-container" class="phase-container" style="display: none;">
+        <!-- FASE 1B: FORMULARIO INTELIGENTE -->
+        <div id="form-container" class="phase-container form-view" style="display: none;">
             <h3>Primero, necesitamos conocerte</h3>
             <div class="form-section">
                 <h4>Tus Datos Personales</h4>
-                <div class="input-group"><label>Nombre Completo</label><input type="text" id="form-name"></div>
-                <div class="input-group"><label>Fecha de Nacimiento</label><input type="date" id="form-dob"></div>
-                <div class="input-group"><label>Estado Civil</label><select id="form-marital-status"><option value="Soltero(a)">Soltero(a)</option><option value="Casado(a)/Unión Libre">Casado(a)/Unión Libre</option></select></div>
+                <div class="input-group"><label for="form-name">Nombre Completo</label><input type="text" id="form-name"></div>
+                <div class="input-group"><label for="form-dob">Fecha de Nacimiento</label><input type="date" id="form-dob"></div>
+                <div class="input-group"><label for="form-marital-status">Estado Civil</label><select id="form-marital-status"><option value="Soltero(a)">Soltero(a)</option><option value="Casado(a)/Unión Libre">Casado(a)/Unión Libre</option></select></div>
             </div>
             <div class="form-section" id="partner-section" style="display: none;">
                 <h4>Datos de tu Pareja</h4>
-                <div class="input-group"><label>Nombre de tu Pareja</label><input type="text" id="form-partner-name"></div>
-                <div class="input-group"><label>Fecha de Nacimiento</label><input type="date" id="form-partner-dob"></div>
+                <div class="input-group"><label for="form-partner-name">Nombre de tu Pareja</label><input type="text" id="form-partner-name"></div>
+                <div class="input-group"><label for="form-partner-dob">Fecha de Nacimiento</label><input type="date" id="form-partner-dob"></div>
             </div>
             <div class="form-section">
                 <h4>Tus Dependientes Económicos</h4>
                 <div id="dependents-area"></div>
-                <button id="add-dependent-btn" class="add-expense-btn">+ Añadir Dependiente</button>
+                <button id="add-dependent-btn" class="add-btn">+ Añadir Dependiente</button>
             </div>
             <div class="form-section">
                 <h4>Tu Perfil Profesional y Fiscal</h4>
-                <div class="input-group"><label>Profesión / Puesto</label><input type="text" id="form-profession"></div>
-                <div class="input-group"><label>Código Postal</label><input type="text" id="form-zipcode"></div>
-                <div class="input-group"><label>Régimen Fiscal</label><select id="form-tax-regime"><option>Sueldos y Salarios</option><option>Servicios Profesionales (Honorarios)</option><option>RESICO</option><option>Otro</option></select></div>
+                <div class="input-group"><label for="form-profession">Profesión / Puesto</label><input type="text" id="form-profession"></div>
+                <div class="input-group"><label for="form-zipcode">Código Postal</label><input type="text" id="form-zipcode"></div>
+                <div class="input-group"><label for="form-tax-regime">Régimen Fiscal</label><select id="form-tax-regime"><option>Sueldos y Salarios</option><option>Servicios Profesionales (Honorarios)</option><option>RESICO</option><option>Actividad Empresarial</option><option>Otro</option></select></div>
             </div>
-            <button id="form-continue-btn">Guardar y Continuar a la Calculadora</button>
+            <button id="form-continue-btn" class="cta-button">Guardar y Continuar a la Calculadora</button>
         </div>
 
-        <!-- FASE 2: CALCULADORA (Oculto al inicio) -->
-        <div id="calculator-container" class="phase-container" style="display: none;">
-             <!-- El contenido de la calculadora va aquí, idéntico al que ya te di -->
+        <!-- FASE 2: CALCULADORA -->
+        <div id="calculator-container" class="phase-container form-view" style="display: none;">
+            <h3>Tu Radiografía Financiera</h3>
+            <div class="calculator-summary">
+                <div class="summary-item"><span>Ingreso Neto Mensual:</span> <span id="summary-net-income">$0.00</span></div>
+                <div class="summary-item"><span>Gastos Totales:</span> <span id="summary-total-expenses">$0.00</span></div>
+                <div class="summary-item main-summary"><span>Flujo de Efectivo Mensual:</span> <span id="summary-cash-flow">$0.00</span></div>
+            </div>
+            <div class="calculator-section">
+                <h4>Ingresos Mensuales</h4>
+                <div class="input-group"><label for="gross-income">Ingreso Mensual Bruto</label><input type="number" id="gross-income" class="calc-input" placeholder="50000"></div>
+            </div>
+            <div class="calculator-section">
+                <h4>Gastos Mensuales</h4>
+                <div class="expense-category"><h5>🏡 Vivienda</h5><div class="input-group"><label>Renta / Hipoteca</label><input type="number" class="calc-input expense-input" placeholder="0"></div><div class="custom-expense-area" id="vivienda-custom-area"></div><button class="add-btn" data-target="vivienda-custom-area">+ Añadir Gasto</button></div>
+                <div class="expense-category"><h5>🚗 Transporte</h5><div class="input-group"><label>Gasolina / T. Público</label><input type="number" class="calc-input expense-input" placeholder="0"></div><div class="custom-expense-area" id="transporte-custom-area"></div><button class="add-btn" data-target="transporte-custom-area">+ Añadir Gasto</button></div>
+                <div class="expense-category"><h5>👨‍👩‍👧 Estilo de Vida</h5><div class="input-group"><label>Supermercado</label><input type="number" class="calc-input expense-input" placeholder="0"></div><div class="input-group"><label>Restaurantes / Salidas</label><input type="number" class="calc-input expense-input" placeholder="0"></div><div class="input-group"><label>Colegiaturas</label><input type="number" class="calc-input expense-input" placeholder="0"></div><div class="custom-expense-area" id="estilo-custom-area"></div><button class="add-btn" data-target="estilo-custom-area">+ Añadir Gasto</button></div>
+                <div class="expense-category"><h5>❤️ Salud y Protección</h5><div class="input-group"><label>Seguro GMM</label><input type="number" class="calc-input expense-input" placeholder="0" data-deductible-type="gmm"></div><div class="input-group"><label>Seguro de Vida</label><input type="number" class="calc-input expense-input" placeholder="0"></div><div class="custom-expense-area" id="salud-custom-area"></div><button class="add-btn" data-target="salud-custom-area">+ Añadir Gasto</button></div>
+                <div class="expense-category"><h5>📈 Ahorro e Inversión</h5><div class="input-group"><label>Aportación a PPR</label><input type="number" class="calc-input expense-input" placeholder="0" data-deductible-type="ppr"></div><div class="custom-expense-area" id="inversion-custom-area"></div><button class="add-btn" data-target="inversion-custom-area">+ Añadir Ahorro</button></div>
+            </div>
+            <button id="calculator-continue-btn" class="cta-button">Continuar al Menú de Estrategias</button>
         </div>
         
-        <!-- FASE 3: MENÚ DE ESTRATEGIAS (Oculto al inicio) -->
-        <div id="strategy-container" class="phase-container" style="display: none;">
-             <!-- El menú de estrategias va aquí -->
+        <!-- FASE 3: MENÚ DE ESTRATEGIAS -->
+        <div id="strategy-container" class="phase-container form-view" style="display: none;">
+            <h3>Tu Menú de Estrategias</h3>
+            <p>Este es tu potencial. Elige las estrategias que quieres priorizar con tu presupuesto.</p>
+            <div id="strategy-summary" class="calculator-summary"></div>
+            <div id="strategy-table-container"></div>
+            <button id="strategy-continue-btn" class="cta-button">Construir mi Futuro con esta Selección</button>
         </div>
 
-        <!-- FASE 4: FORMULARIO DE CONTACTO (Oculto al inicio) -->
-        <div id="contact-form-container" class="phase-container" style="display: none;">
+        <!-- FASE 4: FORMULARIO DE CONTACTO -->
+        <div id="contact-form-container" class="phase-container form-view" style="display: none;">
             <h4>Tu Diagnóstico y Visión de Futuro están listos</h4>
-            <div class="input-group"><label>WhatsApp</label><input type="tel" id="contact-whatsapp"></div>
-            <div class="input-group"><label>Correo Electrónico</label><input type="email" id="contact-email"></div>
-            <button id="submit-contact-button">Enviar Mi Plan de Futuro</button>
+            <p>Para enviarte tu resumen en PDF y la carta de tu 'yo del futuro', déjanos tus datos.</p>
+            <div class="input-group"><label for="contact-whatsapp">WhatsApp</label><input type="tel" id="contact-whatsapp"></div>
+            <div class="input-group"><label for="contact-email">Correo Electrónico</label><input type="email" id="contact-email"></div>
+            <button id="submit-contact-button" class="cta-button">Enviar Mi Plan de Futuro</button>
+            <div id="future-letter-container" style="display:none;">
+                <h4>Una Carta Desde Tu Futuro...</h4>
+                <div id="future-letter-content"></div>
+                <a href="#" id="final-cta-button" target="_blank" class="cta-button final-cta">Dar el Primer Paso Hacia este Futuro</a>
+            </div>
         </div>
-
     </main>
+
+    <div id="privacy-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-button">&times;</span>
+            <h2>Aviso de Privacidad Simplificado</h2>
+            <p>imaplanning, con correo economisai@gmail.com, es responsable de tus datos. Usaremos tus datos para generar tu plan financiero y contactarte. Tus datos son confidenciales y no serán transferidos sin tu consentimiento. Puedes ejercer tus derechos ARCO enviando un correo a la dirección mencionada.</p>
+        </div>
+    </div>
     
     <footer class="app-footer">
         <p>&copy; 2025 imaplanning - Todos los derechos reservados.</p>
@@ -88,3 +123,4 @@
     <script src="script.js"></script>
 </body>
 </html>
+
