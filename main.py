@@ -1,71 +1,107 @@
-# main.py
+# main.py - Versión final y completa
 import google.generativeai as genai
 import os
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 import logging
-# ... (otras importaciones)
+import smtplib
+import ssl
+import json
 
 app = Flask(__name__)
-CORS(app)
+# Configuración de CORS para permitir conexiones de tus dominios
+allowed_origins = [
+    "https://imaplanner.onrender.com",
+    "https://imaplanning.github.io"
+]
+CORS(app, resources={r"/*": {"origins": allowed_origins}})
+
 logging.basicConfig(level=logging.INFO)
 
-# Configuración de Gemini
-try:
-    API_KEY = os.environ.get('GEMINI_API_KEY')
-    genai.configure(api_key=API_KEY)
-    model = genai.GenerativeModel('gemini-1.5-flash')
-except Exception as e:
-    logging.error(f"Error al configurar Gemini: {e}")
-
-# --- Endpoint del Chat (sin cambios) ---
+# --- Endpoint del Chat ---
 @app.route('/chat', methods=['POST', 'OPTIONS'])
 def chat_handler():
-    # ...
-    return jsonify({"reply": "Respuesta del chat"})
+    if request.method == 'OPTIONS':
+        return '', 204
+    try:
+        app.logger.info(f"Solicitud de chat recibida de: {request.origin}")
+        API_KEY = os.environ.get('GEMINI_API_KEY')
+        if not API_KEY:
+            app.logger.error("API Key de Gemini no configurada.")
+            return jsonify({"error": "Configuración del servidor incompleta."}), 500
+            
+        genai.configure(api_key=API_KEY)
+        model = genai.GenerativeModel('gemini-1.5-flash')
 
-# --- Endpoint para Capturar Leads (actualizado para recibir más datos) ---
+        with open('prompt.txt', 'r', encoding='utf-8') as f:
+            SYSTEM_PROMPT = f.read()
+
+        data = request.json
+        conversation_history = data.get('history', [])
+        
+        full_history = [
+            {'role': 'user', 'parts': [{'text': SYSTEM_PROMPT}]},
+            {'role': 'model', 'parts': [{'text': "Entendido. Estoy listo para actuar como IMA Planner."}]}
+        ] + conversation_history
+        
+        chat_session = model.start_chat(history=full_history[:-1])
+        last_user_message = conversation_history[-1]['parts'][0]['text']
+        
+        response = chat_session.send_message(last_user_message)
+        app.logger.info('Respuesta de IA generada exitosamente.')
+
+        return jsonify({"reply": response.text})
+    except FileNotFoundError:
+        app.logger.error("Error: El archivo 'prompt.txt' no se encontró.")
+        return jsonify({"error": "Error de configuración del servidor: falta un archivo."}), 500
+    except Exception as e:
+        app.logger.error(f"Ocurrió un error inesperado en /chat: {e}")
+        return jsonify({"error": "Hubo un problema al procesar tu solicitud."}), 500
+
+# --- Endpoint para Capturar Leads ---
 @app.route('/submit-lead', methods=['POST'])
 def submit_lead_handler():
-    # ... (lógica para recibir todos los datos y enviar el correo al asesor) ...
-    return jsonify({"success": True})
-
-# --- ✨ NUEVO Endpoint: Optimización de Gastos ✨ ---
-@app.route('/get-suggestions', methods=['POST'])
-def get_suggestions_handler():
     try:
         data = request.json
-        expenses = data.get('expenses', {})
+        full_data = data.get('fullData', {})
         
-        prompt = f"""
-        Actúa como un coach financiero empático en México. Analiza esta lista de gastos mensuales: {expenses}.
-        Ofrece 3 sugerencias personalizadas, breves y accionables para optimizar el presupuesto sin sacrificar calidad de vida.
-        """
-        
-        response = model.generate_content(prompt)
-        return jsonify({"suggestions": response.text})
-    except Exception as e:
-        logging.error(f"Error en get_suggestions: {e}")
-        return jsonify({"error": "No se pudieron generar sugerencias"}), 500
+        if not full_data:
+            return jsonify({"error": "No se recibieron datos del lead."}), 400
 
-# --- ✨ NUEVO Endpoint: Carta "Volver al Futuro" ✨ ---
-@app.route('/generate-future-letter', methods=['POST'])
-def generate_future_letter_handler():
-    try:
-        client_data = request.json
+        # Credenciales de correo desde las variables de entorno de Render
+        sender_email = os.environ.get('SENDER_EMAIL')
+        email_password = os.environ.get('EMAIL_PASSWORD')
         
-        prompt = f"""
-        Actúa como un asesor financiero empático de imaplanning. Escribe una carta inspiradora desde el futuro (10 años desde ahora) para tu cliente.
-        DATOS DEL CLIENTE:
-        - Nombre: {client_data.get('personal', {}).get('name', 'Cliente')}
-        - Metas seleccionadas: {client_data.get('strategies', [])}
+        if not sender_email or not email_password:
+            app.logger.error("Credenciales de correo no configuradas en el servidor.")
+            return jsonify({"error": "Error de configuración del servidor."}), 500
+
+        # Formatear el cuerpo del correo con toda la información del cliente
+        subject = f"Nuevo Lead de IMA Planner: {full_data.get('personal', {}).get('name', 'N/A')}"
         
-        En la carta, celebra el éxito que ha logrado gracias a las decisiones que tomó hoy. Conecta sus metas elegidas con su éxito futuro. Por ejemplo, si eligió 'Retiro', habla de su tranquilidad financiera.
-        El tono debe ser positivo, motivador y breve (3 párrafos). Firma como "Tu Asesor, imaplanning."
+        # Usamos json.dumps para formatear el objeto de datos de forma legible
+        pretty_data = json.dumps(full_data, indent=2, ensure_ascii=False)
+        
+        body = f"""
+        ¡Felicidades! Un nuevo prospecto ha completado el Asesor Virtual.
+
+        A continuación se muestra toda la información recopilada para tu seguimiento:
+
+        {pretty_data}
         """
+        message = f"Subject: {subject}\n\n{body}"
+
+        # Enviar el correo
+        context = ssl.create_default_context()
+        with smtplib.SMTP_SSL("smtp.gmail.com", 465, context=context) as server:
+            server.login(sender_email, email_password)
+            # El email se envía al mismo remitente (el asesor)
+            server.sendmail(sender_email, sender_email, message.encode('utf-8'))
         
-        response = model.generate_content(prompt)
-        return jsonify({"letter": response.text})
+        app.logger.info(f"Lead enviado exitosamente a {sender_email}")
+        return jsonify({"success": True}), 200
+
     except Exception as e:
-        logging.error(f"Error en generate_future_letter: {e}")
-        return jsonify({"error": "No se pudo generar la carta"}), 500
+        app.logger.error(f"Ocurrió un error inesperado en /submit-lead: {e}")
+        return jsonify({"error": "No se pudo enviar el lead."}), 500
+
