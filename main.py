@@ -104,4 +104,3 @@ def submit_lead_handler():
     except Exception as e:
         app.logger.error(f"Ocurrió un error inesperado en /submit-lead: {e}")
         return jsonify({"error": "No se pudo enviar el lead."}), 500
-
