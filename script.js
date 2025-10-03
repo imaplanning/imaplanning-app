@@ -65,4 +65,27 @@ document.addEventListener('DOMContentLoaded', () => {
             addMessageToChat('Lo siento, estoy teniendo problemas para conectarme. Por favor, intenta de nuevo más tarde.', 'bot');
         }
     }
+   
+// ======== LÓGICA PARA LA VENTANA MODAL DE PRIVACIDAD ========
+const privacyModal = document.getElementById('privacy-modal');
+const privacyLink = document.getElementById('privacy-link');
+const closeBtn = document.querySelector('.close-btn');
+
+// Cuando el usuario hace clic en el enlace, abre la modal
+privacyLink.onclick = function(event) {
+    event.preventDefault(); // Evita que la página salte hacia arriba
+    privacyModal.style.display = "block";
+}
+
+// Cuando el usuario hace clic en la (x), cierra la modal
+closeBtn.onclick = function() {
+    privacyModal.style.display = "none";
+}
+
+// Cuando el usuario hace clic fuera de la modal, la cierra
+window.onclick = function(event) {
+    if (event.target == privacyModal) {
+        privacyModal.style.display = "none";
+    }
+}
 });
