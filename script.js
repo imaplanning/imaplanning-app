@@ -6,13 +6,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const userInput = document.getElementById('user-input');
     const chatWindow = document.getElementById('chat-window');
 
-    // URL de tu backend en Render
-    const BACKEND_URL = 'https://imaplanning-backend.onrender.com/chat';
+    const BACKEND_URL = 'https://imaplanner-backend.onrender.com/chat';
 
     startBtn.addEventListener('click', () => {
         welcomeContainer.style.display = 'none';
         chatModuleContainer.style.display = 'block';
-        // Mensaje inicial del bot al comenzar
         addMessageToChat('¡Hola! Soy IMA Planner. Gracias por dar el primer paso. Para iniciar tu diagnóstico, por favor, dime tu nombre.', 'bot');
     });
 
@@ -37,7 +35,6 @@ document.addEventListener('DOMContentLoaded', () => {
         messageElement.classList.add('chat-message', `${sender}-message`);
         messageElement.textContent = text;
         chatWindow.appendChild(messageElement);
-        // Hacer scroll automático al final
         chatWindow.scrollTop = chatWindow.scrollHeight;
     }
 
@@ -65,27 +62,23 @@ document.addEventListener('DOMContentLoaded', () => {
             addMessageToChat('Lo siento, estoy teniendo problemas para conectarme. Por favor, intenta de nuevo más tarde.', 'bot');
         }
     }
-   
-// ======== LÓGICA PARA LA VENTANA MODAL DE PRIVACIDAD ========
-const privacyModal = document.getElementById('privacy-modal');
-const privacyLink = document.getElementById('privacy-link');
-const closeBtn = document.querySelector('.close-btn');
 
-// Cuando el usuario hace clic en el enlace, abre la modal
-privacyLink.onclick = function(event) {
-    event.preventDefault(); // Evita que la página salte hacia arriba
-    privacyModal.style.display = "block";
-}
+    const privacyModal = document.getElementById('privacy-modal');
+    const privacyLink = document.getElementById('privacy-link');
+    const closeBtn = document.querySelector('.close-btn');
 
-// Cuando el usuario hace clic en la (x), cierra la modal
-closeBtn.onclick = function() {
-    privacyModal.style.display = "none";
-}
+    privacyLink.onclick = function(event) {
+        event.preventDefault();
+        privacyModal.style.display = "block";
+    }
 
-// Cuando el usuario hace clic fuera de la modal, la cierra
-window.onclick = function(event) {
-    if (event.target == privacyModal) {
+    closeBtn.onclick = function() {
         privacyModal.style.display = "none";
     }
-}
+
+    window.onclick = function(event) {
+        if (event.target == privacyModal) {
+            privacyModal.style.display = "none";
+        }
+    }
 });
