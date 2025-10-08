@@ -1,5 +1,6 @@
 Flask
-google-generativeai
+# Se especifica una versión reciente para asegurar compatibilidad
+google-generativeai==0.4.0
 python-dotenv
 Flask-Cors
 gunicorn
