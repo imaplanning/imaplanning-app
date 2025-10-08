@@ -9,8 +9,8 @@ load_dotenv()
 genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
 
 # --- INICIO DEL CAMBIO ---
-# Se actualiza al modelo más reciente y estable: Gemini 1.5 Pro
-model = genai.GenerativeModel('gemini-1.5-pro-latest')
+# Se actualiza al modelo Gemini 1.5 Flash para máxima compatibilidad
+model = genai.GenerativeModel('gemini-1.5-flash-latest')
 # --- FIN DEL CAMBIO ---
 
 with open('prompt.txt', 'r', encoding='utf-8') as f:
