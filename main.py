@@ -8,7 +8,10 @@ load_dotenv()
 
 genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
 
-model = genai.GenerativeModel('gemini-1.0-pro')
+# --- INICIO DEL CAMBIO ---
+# Se revierte el nombre del modelo al estándar 'gemini-pro'
+model = genai.GenerativeModel('gemini-pro')
+# --- FIN DEL CAMBIO ---
 
 with open('prompt.txt', 'r', encoding='utf-8') as f:
     prompt_texto = f.read()
