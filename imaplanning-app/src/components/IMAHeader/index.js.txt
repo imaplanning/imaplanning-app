@@ -1,0 +1,30 @@
+import React from 'react';
+import IMALogo from '../IMALogo';
+import './IMAHeader.css';
+
+const IMAHeader = () => {
+  return (
+    <header className="ima-header">
+      <div className="header-content">
+        <div className="brand-section">
+          <IMALogo size="medium" />
+          <div className="brand-text">
+            <h1 className="company-name">IMA Planning</h1>
+            <p className="company-tagline">Asesoría Financiera Conductual</p>
+          </div>
+        </div>
+        
+        <div className="pillars-section">
+          <div className="pillar-tags">
+            <span className="pillar">🛡️ Emergencias</span>
+            <span className="pillar">🏥 Seguros</span>
+            <span className="pillar">🌴 Retiro</span>
+            <span className="pillar">📚 Educación</span>
+          </div>
+        </div>
+      </div>
+    </header>
+  );
+};
+
+export default IMAHeader;

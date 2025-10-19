@@ -1,0 +1,243 @@
+// Agente Financiero IMA Planning - Núcleo Inteligente
+class FinancialAdvisorAgent {
+  constructor() {
+    this.userProfile = {
+      nombre: '',
+      edad: 0,
+      ingresos: 0,
+      gastos: 0,
+      perfilRiesgo: '',
+      objetivos: [],
+      hijos: []
+    };
+    this.currentStep = 'inicio';
+    this.conversationHistory = [];
+    this.uma = 108.57;
+  }
+
+  procesarMensaje(mensajeUsuario) {
+    this.conversationHistory.push({
+      usuario: mensajeUsuario,
+      timestamp: new Date(),
+      step: this.currentStep
+    });
+
+    const respuesta = this.generarRespuesta(mensajeUsuario);
+    
+    this.conversationHistory.push({
+      agente: respuesta.mensaje,
+      timestamp: new Date(),
+      step: this.currentStep
+    });
+
+    this.currentStep = respuesta.nextStep || this.currentStep;
+    return respuesta;
+  }
+
+  generarRespuesta(mensajeUsuario) {
+    const mensaje = mensajeUsuario.toLowerCase().trim();
+
+    switch (this.currentStep) {
+      case 'inicio':
+        return this.procesarInicio(mensaje);
+      case 'diagnostico':
+        return this.procesarDiagnostico(mensaje);
+      case 'fondo_emergencia':
+        return this.procesarFondoEmergencia(mensaje);
+      case 'seguros':
+        return this.procesarSeguros(mensaje);
+      case 'retiro':
+        return this.procesarRetiro(mensaje);
+      case 'proyectos':
+        return this.procesarProyectos(mensaje);
+      case 'recomendacion':
+        return this.procesarRecomendacion(mensaje);
+      default:
+        return this.procesarDefault(mensaje);
+    }
+  }
+
+  procesarInicio(mensaje) {
+    return {
+      mensaje: "¡Hola! Soy tu asesor financiero IMA. ¿Estás listo para comenzar un proceso que transformará tu relación con el dinero?",
+      opciones: [
+        { texto: "✅ Sí, empecemos", next: "diagnostico" },
+        { texto: "🤔 Cuéntame más", next: "explicacion_ima" }
+      ],
+      nextStep: "diagnostico"
+    };
+  }
+
+  procesarDiagnostico(mensaje) {
+    if (!this.userProfile.nombre) {
+      this.userProfile.nombre = mensaje;
+      return {
+        mensaje: `Mucho gusto ${mensaje}! ¿Cuál es tu edad?`,
+        nextStep: "diagnostico"
+      };
+    }
+
+    if (!this.userProfile.edad && !isNaN(mensaje)) {
+      this.userProfile.edad = parseInt(mensaje);
+      return {
+        mensaje: "Perfecto. ¿Cuáles son tus ingresos mensuales netos?",
+        nextStep: "diagnostico"
+      };
+    }
+
+    if (!this.userProfile.ingresos && !isNaN(mensaje)) {
+      this.userProfile.ingresos = parseFloat(mensaje);
+      return {
+        mensaje: "Gracias. ¿Tienes hijos menores de 12 años? (responde sí o no)",
+        nextStep: "diagnostico"
+      };
+    }
+
+    if (mensaje.includes('si') || mensaje.includes('sí')) {
+      this.userProfile.hijos = [{ edad: 12 }];
+      return {
+        mensaje: "Entendido. Ahora tengo información suficiente. Te presento los 4 pilares IMA:\n\n🛡️ 1. Fondo de emergencias\n🏥 2. Seguros de vida y gastos médicos\n🌴 3. Planificación de retiro\n📚 4. Proyectos de educación\n\n¿Por cuál te gustaría comenzar?",
+        opciones: [
+          { texto: "🛡️ Fondo de emergencias", next: "fondo_emergencia" },
+          { texto: "🏥 Seguros médicos y vida", next: "seguros" },
+          { texto: "🌴 Mi retiro", next: "retiro" },
+          { texto: "📚 Educación hijos", next: "proyectos" }
+        ],
+        nextStep: "fondo_emergencia"
+      };
+    } else {
+      return {
+        mensaje: "Perfecto. Ahora tengo información suficiente. Te presento los 4 pilares IMA:\n\n🛡️ 1. Fondo de emergencias\n🏥 2. Seguros de vida y gastos médicos\n🌴 3. Planificación de retiro\n📚 4. Proyectos personales\n\n¿Por cuál te gustaría comenzar?",
+        opciones: [
+          { texto: "🛡️ Fondo de emergencias", next: "fondo_emergencia" },
+          { texto: "🏥 Seguros médicos y vida", next: "seguros" },
+          { texto: "🌴 Mi retiro", next: "retiro" },
+          { texto: "🎯 Proyectos personales", next: "proyectos" }
+        ],
+        nextStep: "fondo_emergencia"
+      };
+    }
+  }
+
+  procesarFondoEmergencia(mensaje) {
+    const gastosMensuales = this.userProfile.gastos || this.userProfile.ingresos * 0.7;
+    const fondo3Meses = gastosMensuales * 3;
+    const fondo6Meses = gastosMensuales * 6;
+    const fondo12Meses = gastosMensuales * 12;
+
+    return {
+      mensaje: `🛡️ **FONDO DE EMERGENCIAS**\n\nBasado en tus ingresos, tu fondo de emergencia debería ser:\n\n• **Mínimo (3 meses):** $${fondo3Meses.toLocaleString()}\n• **Recomendado (6 meses):** $${fondo6Meses.toLocaleString()}\n• **Óptimo (12 meses):** $${fondo12Meses.toLocaleString()}\n\n¿Te gustaría conocer estrategias para construir este fondo?`,
+      opciones: [
+        { texto: "💡 Ver estrategias de ahorro", next: "seguros" },
+        { texto: "🔄 Siguiente pilar (Seguros)", next: "seguros" }
+      ],
+      nextStep: "seguros"
+    };
+  }
+
+  procesarSeguros(mensaje) {
+    const ingresoAnual = this.userProfile.ingresos * 12;
+    const primaMinima = ingresoAnual * 0.08;
+    const primaMaxima = ingresoAnual * 0.15;
+    const primaRecomendada = ingresoAnual * 0.12;
+    
+    const sumaAseguradaVida = ingresoAnual * 10;
+
+    return {
+      mensaje: `🏥 **SEGUROS DE GASTOS MÉDICOS Y VIDA**\n\n**Gastos Médicos Mayores:**\n• Prima recomendada: $${primaRecomendada.toLocaleString()} anual (8-15% de tu ingreso)\n• Rango: $${primaMinima.toLocaleString()} - $${primaMaxima.toLocaleString()}\n• **DEDUCIBLE DE IMPUESTOS**\n\n**Seguro de Vida + ITP:**\n• Suma asegurada: $${sumaAseguradaVida.toLocaleString()} (10 años de ingresos)\n• Cobertura ITP: **IGUAL** a fallecimiento\n• Protección integral para tu familia`,
+      opciones: [
+        { texto: "🌴 Siguiente pilar (Retiro)", next: "retiro" },
+        { texto: "📊 Ver plan completo", next: "recomendacion" }
+      ],
+      nextStep: "retiro"
+    };
+  }
+
+  procesarRetiro(mensaje) {
+    const ingresoAnual = this.userProfile.ingresos * 12;
+    const ingresoRequeridoRetiro = ingresoAnual * 0.8;
+    const capitalNecesario = ingresoRequeridoRetiro / 0.04;
+    
+    const umaAnual = this.uma * 365;
+    const limiteDeduccion = 5 * umaAnual;
+    const limiteRetiroExento = 90 * umaAnual;
+
+    return {
+      mensaje: `🌴 **PLANIFICACIÓN DE RETIRO**\n\n• Tasa reemplazo objetivo: **80%** ($${ingresoRequeridoRetiro.toLocaleString()}/año)\n• Capital necesario: $${capitalNecesario.toLocaleString()}\n\n**Límites fiscales 2024:**\n• Deducción PPR: $${limiteDeduccion.toLocaleString()} (5 UMAs)\n• Retiro exento: $${limiteRetiroExento.toLocaleString()} (90 UMAs)`,
+      opciones: [
+        { texto: "📚 Siguiente pilar", next: "proyectos" },
+        { texto: "🎯 Ver recomendación final", next: "recomendacion" }
+      ],
+      nextStep: "proyectos"
+    };
+  }
+
+  procesarProyectos(mensaje) {
+    if (this.userProfile.hijos.length > 0) {
+      const costoUniversidad = 500000;
+      const anosHastaUniversidad = 6;
+      const ahorroMensual = this.calcularAhorroMensual(costoUniversidad, anosHastaUniversidad);
+
+      return {
+        mensaje: `📚 **PLAN DE EDUCACIÓN**\n\nPara la educación universitaria de tus hijos:\n\n• Costo estimado: $${costoUniversidad.toLocaleString()}\n• Ahorro mensual: $${ahorroMensual.toLocaleString()}\n• Horizonte: ${anosHastaUniversidad} años\n\n💡 **Recomendación:** Iniciar ASAP para aprovechar interés compuesto`,
+        opciones: [
+          { texto: "📊 Ver plan integral", next: "recomendacion" },
+          { texto: "👨‍💼 Asesoría personalizada", next: "asesoria_personal" }
+        ],
+        nextStep: "recomendacion"
+      };
+    } else {
+      return {
+        mensaje: `🎯 **PROYECTOS PERSONALES**\n\n¿Tienes proyectos específicos en mente?\n\n• Compra de vivienda\n• Negocio propio\n• Viajes importantes\n• Otros proyectos\n\nCuéntame sobre tus metas y te ayudo a planificarlas.`,
+        opciones: [
+          { texto: "📊 Ver plan integral", next: "recomendacion" },
+          { texto: "💼 Comenzar implementación", next: "asesoria_personal" }
+        ],
+        nextStep: "recomendacion"
+      };
+    }
+  }
+
+  procesarRecomendacion(mensaje) {
+    return {
+      mensaje: `🎯 **PLAN FINANCIERO COMPLETO IMA PLANNING**\n\nHola ${this.userProfile.nombre}, basado en tu perfil:\n\n📊 **Resumen de Recomendaciones:**\n\n🛡️ **Fondo de Emergencias:** 6 meses de gastos\n🏥 **Seguros:** 10-12% de tu ingreso anual\n🌴 **Retiro:** Tasa de reemplazo del 80%\n📚 **Educación/Proyectos:** Ahorro sistemático\n\n💡 **Siguientes Pasos:**\n1. Establecer fondo de emergencia prioritario\n2. Cotizar seguros con cobertura ITP\n3. Iniciar aportaciones a PPR\n4. Planificar proyectos específicos\n\n¿Te gustaría profundizar en algún aspecto?`,
+      opciones: [
+        { texto: "🛡️ Profundizar en Emergencias", next: "fondo_emergencia" },
+        { texto: "🏥 Profundizar en Seguros", next: "seguros" },
+        { texto: "🌴 Profundizar en Retiro", next: "retiro" },
+        { texto: "🔄 Nueva conversación", next: "inicio" }
+      ],
+      nextStep: "recomendacion"
+    };
+  }
+
+  procesarDefault(mensaje) {
+    return {
+      mensaje: "Entiendo. ¿Te gustaría revisar algún pilar en específico o prefieres ver la recomendación integral?",
+      opciones: [
+        { texto: "🛡️ Fondo emergencias", next: "fondo_emergencia" },
+        { texto: "🏥 Seguros", next: "seguros" },
+        { texto: "🌴 Retiro", next: "retiro" },
+        { texto: "📚 Educación/Proyectos", next: "proyectos" },
+        { texto: "📊 Recomendación completa", next: "recomendacion" }
+      ],
+      nextStep: "recomendacion"
+    };
+  }
+
+  calcularAhorroMensual(meta, anos) {
+    const tasa = 0.07;
+    const meses = anos * 12;
+    const tasaMensual = tasa / 12;
+    const factor = (Math.pow(1 + tasaMensual, meses) - 1) / tasaMensual;
+    return Math.round(meta / factor);
+  }
+
+  getProgreso() {
+    const steps = ['inicio', 'diagnostico', 'fondo_emergencia', 'seguros', 'retiro', 'proyectos', 'recomendacion'];
+    const currentIndex = steps.indexOf(this.currentStep);
+    return Math.round((currentIndex / steps.length) * 100);
+  }
+}
+
+export default FinancialAdvisorAgent;

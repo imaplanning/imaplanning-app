@@ -1,0 +1,21 @@
+import React from 'react';
+import './IMALogo.css';
+
+const IMALogo = ({ size = 'medium' }) => {
+  const sizes = {
+    small: { width: '40px', height: '40px', fontSize: '14px' },
+    medium: { width: '60px', height: '60px', fontSize: '18px' },
+    large: { width: '100px', height: '100px', fontSize: '24px' }
+  };
+
+  return (
+    <div className="ima-logo" style={sizes[size]}>
+      <div className="logo-content">
+        <span className="logo-text">IMA</span>
+        <span className="logo-subtext">Planning</span>
+      </div>
+    </div>
+  );
+};
+
+export default IMALogo;
